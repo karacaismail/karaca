@@ -89,6 +89,11 @@ Do not invent tokens, variants or values; tokens/*.json is the single source of 
 
 ### 3.2 Prompt 2 — Matrix story üretimi (görsel regresyon hedefi)
 
+Not (X5 — [10](10-frontend-katman-mimarisi.md) MK-19): matris, etkileşimli bileşenlerde
+state boyutuyla genişletilir (StateMatrix: default/hover/active/focus-visible/disabled/
+readonly/selected/invalid/loading + bileşik durumlar); hover satırı yalnız
+hover-destekli emülasyonda snapshot'lanır.
+
 Ne zaman kullanılır: P1 kabulü (TextField 6 varyantta matrix'te) ve P2'de her bileşen
 ailesine matrix story eklemek için; bu story'ler görsel regresyonun birincil hedefidir.
 

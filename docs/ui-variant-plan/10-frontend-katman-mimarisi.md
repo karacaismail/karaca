@@ -43,6 +43,8 @@ Bağlantılı dosyalar: [00-genel-plan.md](./00-genel-plan.md) ·
 | MK-16 | İlk teslimat tek **golden slice**'tır: liste/DataGrid + URL'de filtre/sort/page + form veya drawer + 5 durum (loading/empty/error/permission/zero-results) + tr ve ar-RTL + 3 density — AYNI SurfaceDefinition ile hem AntD hem custom AEP render | Bilinmeyen bilinmeyenleri (AntD global CSS/portal sızıntıları, React Aria–AntD focus/dismiss farkları, URL–Query key senkronu, RTL uzaması, virtualization) geniş üretimden ÖNCE ortaya çıkarır |
 | MK-17 | Compact density (36px satır) yalnız fine-pointer masaüstü bağlamında önerilir; touch bağlamda standard/comfortable varsayılır; her durumda interaktif hücre hit-area ≥44px kuralı geçerli kalır | 36px satır – 44px dokunma hedefi gerilimi cihaz koşuluyla çözülür ([04](./04-table-varyantlari.md) hit-area kuralı korunur) |
 | MK-18 | Theme bir **ThemeProfile**'dır: renderer'ın token konfigürasyon profili — bağımsız bir kompozisyon katmanı değildir. A–F overlay yalnız X1 kesen ekseninde yaşar; D1'deki üç-seviye ifadesi ThemeProfile yığını olarak okunur | D1/X4 (tema modları) ve D1/X1 (A–F) mükerrerliği kapanır; tek konum kuralı |
+| MK-19 | Pseudo-class/pseudo-element/aria/data-state grameri **X5 "Interaction State Grammar"** kesen ekseni olarak resmileşir: durum ROLLERİ semantic token'da yaşar, DEĞERLERİNİ X1 variant overlay çözer; kanonik durum kancası R5 sahibinin yaydığı attribute'lardır | Pseudo-class "CSS detayı" bırakılırsa token, a11y, headless davranış ve test birbirinden kopar; beşinci bir token koleksiyonu veya üçüncü bir adlandırma icat edilmez |
+| MK-20 | Dashboard grafik blokları (**ECharts**, JSON-config) R8 pattern'idir (ChartBlock): ECharts teması token'lardan üretilir (dark/light), palet yalnız semantic'ten gelir, tipografi plan değişmezlerine tabidir (Roboto, min 1rem); konteyner kart A–F overlay'ine tabidir, grafik İÇİ için A–F sadakati iddia edilmez; loading=skeleton, `prefers-reduced-motion`'da animasyon kapalı; yoğun seride canvas renderer | Grafik motoru üçüncü bir stil kaynağı olamaz; tema tek kaynaktan (R1) türer |
 
 ## 2. Katman haritası
 
@@ -92,6 +94,8 @@ KESEN EKSENLER (katman değil; ilgili katmanları dikine keser):
   X2 A11y + test kapıları → her katmanın "bitti" tanımı (story+play+axe+görsel regresyon)
   X3 i18n/RTL             → B4 (locale/Intl) + R2 (logical properties) ÇİFT yerleşim
   X4 Tema modları + density → token seviyesinde (R1) çözülür, bileşene sızmaz
+  X5 Interaction State Grammar → R2 taban kuralları + R5 attribute'ları + R6 state
+     görünümleri + Storybook StateMatrix (MK-19)
 ```
 
 ## 3. Katman tanımları
@@ -192,6 +196,58 @@ E5 iyimser "adapter'ı değiştir" adımı DEĞİLDİR; kendi protokol kapısıy
 pagination davranışı, auth/token yenileme, hata zarfı, optimistic concurrency, upload
 ve yetki modeli bu kapıda gerçek backend'e karşı ayrıca doğrulanır.
 
+### F. Kesen eksen X5 — Interaction State Grammar (MK-19)
+
+Pseudo-class'lar CSS detayı değil; token, erişilebilirlik, headless davranış ve Storybook
+testini birbirine bağlayan resmi sözleşmedir. Dört parçası:
+
+**1. Durum kancaları (katalog).**
+
+| Grup | Kancalar |
+|---|---|
+| Etkileşim | `:hover` `:active` `:focus` `:focus-visible` `:focus-within` |
+| Form | `:enabled` `:disabled` `:read-only` `:required` `:checked` `:indeterminate` `:placeholder-shown` `:user-valid` `:user-invalid` `:in-range` `:out-of-range` `:autofill` |
+| Seçim/navigasyon | `[aria-current="page"]` `[aria-selected]` `[aria-pressed]` `[aria-expanded]` `:target`; link'te `:any-link` (`:visited` yalnız gerçek navigasyon bağlamında, tarayıcı kısıtları bilinerek) |
+| Yapısal | `:first-child` `:last-child` `:only-child` `:nth-child()` `:empty` — yalnız görsel yerleşim; iş kuralı/yetki ASLA buradan sürülmez |
+| Modern | `:is()` `:where()` `:not()` `:has()` `:dir(rtl)` `:lang()` |
+| Pseudo-element | `::before` `::after` `::placeholder` `::selection` `::backdrop` `::marker` `::file-selector-button` |
+
+**2. Kanonik durum kaynağı R5 sahibidir.** Headless sahibin yaydığı `data-*` / `aria-*`
+attribute'ları birincil kancadır (`[data-selected]`, `[data-state="open"]`,
+`[aria-expanded="true"]`); saf pseudo-class yalnız tarayıcının doğal verdiği durumlarda
+kullanılır. Üçüncü bir adlandırma sözleşmesi icat edilmez: hangi kütüphane ailenin
+sahibiyse (MK-2) onun attribute sözleşmesi hedeflenir, farklılıkları adapter normalize
+eder. AntD yüzeylerinde bu grammar yalnız yaklaşık uygulanır (MK-5).
+
+**3. Durum token'ları yeni koleksiyon değildir.** `control/background/hover` gibi roller
+semantic koleksiyonda yaşar; DEĞERLERİ X1 variant-overlay çözer (A'da hover = border
+koyulaşır + %4 tint, B'de bir ton açılır — [01](./01-varyant-cercevesi.md) eksen 4).
+Pseudo-class bloğu içine hex yazmak yasaktır.
+
+**4. Bileşik durumlar tasarlanır ve test edilir:** hover+selected,
+focus-visible+selected, focus-visible+invalid, readonly+focus, expanded+focus,
+disabled+dark, invalid+RTL, loading+reduced-motion. Üstün kural: **focus-visible hiçbir
+durum tarafından (error/selected/checked dahil) görünmez kılınamaz.**
+
+Bağlayıcı teknik kurallar:
+
+- Hover yalnız `@media (hover: hover) and (pointer: fine)` altında uygulanır; touch'ta
+  yapışan hover yasak.
+- Doğrulama görünümü `:invalid` ile değil `:user-invalid` (veya touched/submitted state)
+  ile sürülür; kullanıcı alanla etkileşmeden hata gösterilmez. `:placeholder-shown`
+  label yerine geçemez ([03](./03-form-varyantlari.md) kuralı).
+- Taban kurallar `:where()` ile sıfır specificity'de yazılır ki variant overlay
+  kolayca ezebilsin.
+- `:has()` form seviyesinde serbest (`.field:has([aria-invalid="true"])`); ancak
+  sanallaştırılmış tablo satırı hot-path'inde YASAK — 10k satır/60fps hedefi
+  ([04](./04-table-varyantlari.md)); satır durumları R5'in yazdığı attribute ile çözülür.
+- `::before/::after` kritik metin üretmez, ürün anlamı taşımaz; `::selection` kontrast
+  AA doğrulanmadan özelleştirilmez; dialog/drawer scrim'i `::backdrop` üzerinden
+  [01](./01-varyant-cercevesi.md)'deki blursuz %40 ink/950 token'ıyla uygulanır.
+- Storybook karşılığı: her etkileşimli bileşende **StateMatrix** story'si
+  ([07](./07-storybook-mcp-promptlari.md) Prompt 2 matrisine state boyutu eklenir) +
+  play testleri (focus/klavye/checked/expanded/validation) + bileşik durum snapshot'ları.
+
 ## 4. Bağımlılık kuralları (yasaklar)
 
 - Her katman yalnız kendinden ALTTAKİ katmana bağımlıdır; yatay ve yukarı bağımlılık yasak.
@@ -219,6 +275,25 @@ ve yetki modeli bu kapıda gerçek backend'e karşı ayrıca doğrulanır.
 Backend başlamadan tamamlanabilir sınır: A3 (tipler) + B (mock'la) + C + D + E1–E4.
 Bu sınır "ürün bitti" değil, **entegrasyona hazır frontend** demektir.
 
+### 5.1 Storybook geliştirme kapsamı (hangi katman Storybook'da geliştirilir?)
+
+| Katman | Storybook'da? | Nasıl |
+|---|---|---|
+| R1 Token'lar | Evet | Token docs sayfası: swatch'ler, kontrast oranları, radius/spacing cetveli |
+| R2 CSS temeli + X5 grameri | Evet | State-grammar demo story'leri; StateMatrix |
+| R3 Grid/layout | Evet | Viewport story'leri (320/768/1440) + container-query unit story'leri |
+| R4 Görsel primitive'ler | Evet | Story + axe |
+| R5 Davranış katmanı | Evet | Görünmez katman, play testleriyle görünür test edilir |
+| R6 Bileşenler | Evet — ana geliştirme yüzeyi | Matrix story (varyant × tema × density × state) |
+| R7 Durum bileşenleri | Evet | Loading/empty/error/permission/zero-results story'leri |
+| R8 Pattern'ler (DataGrid, ChartBlock, form bölümü) | Evet | MSW fixture + 10k perf story + i18n story'leri |
+| D1 ThemeProfile | Evet | globalTypes toggle (theme × density × variant) |
+| D2 UI Template / masterpage | Evet | Slot'lu kompozisyon story'leri, MSW verisiyle |
+| E1 App Shell, E2 sayfa şablonları | Evet (MSW ile) | Router decorator + senaryo story'leri |
+| B App Core | Kısmen | Decorator/mock; gerçek URL↔Query senkronu uygulamada doğrulanır |
+| E3 Feature ekranları | Kısmen | MSW senaryolarıyla; iş akışı e2e'ye kalır |
+| E5 Gerçek entegrasyon | Hayır | Uygulama + e2e; Storybook'un konusu değil |
+
 ## Kabul kriterleri
 
 - [ ] SurfaceContract ve SDK'da UI tipi importu yok; CI taraması kurulu (MK-7).
@@ -233,3 +308,6 @@ Bu sınır "ürün bitti" değil, **entegrasyona hazır frontend** demektir.
 - [ ] SurfaceDefinition kanoniği JSON Schema 2020-12; TS/Zod tüketicileri şemadan üretiliyor, elle çatallanmıyor (MK-12).
 - [ ] MK-16 golden slice P2 başlamadan iki renderer'da da yeşil.
 - [ ] Form validation tek otoriteden (RHF+Zod) türüyor; AntD Form kuralları ikinci kaynak değil (MK-13).
+- [ ] X5: her etkileşimli bileşende StateMatrix story'si var; hover yalnız hover-destekli cihazda; doğrulama `:user-invalid`/touched ile; focus-visible hiçbir bileşik durumda kaybolmuyor (MK-19).
+- [ ] Durum stilleri R5 sahibinin attribute sözleşmesini hedefliyor; pseudo-class bloklarında hex yok; sanallaştırılmış satır hot-path'inde `:has()` yok.
+- [ ] ChartBlock teması token'lardan üretiliyor; grafik paleti semantic dışına çıkmıyor; reduced-motion'da animasyon kapalı (MK-20).

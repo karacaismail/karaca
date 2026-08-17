@@ -25,7 +25,7 @@ ince ayrıntı karşılaştırmasıdır.
 | [06-figma-mcp-promptlari.md](docs/ui-variant-plan/06-figma-mcp-promptlari.md) | Figma MCP prompt kataloğu (variables, component set, karşılaştırma canvas'ı) |
 | [07-storybook-mcp-promptlari.md](docs/ui-variant-plan/07-storybook-mcp-promptlari.md) | Storybook MCP prompt kataloğu (matrix story, testler, CI kapıları) |
 | [08-degerlendirme-protokolu.md](docs/ui-variant-plan/08-degerlendirme-protokolu.md) | Varyant seçim protokolü: skor kartı, eleme, domain eşleme, freeze |
-| [10-frontend-katman-mimarisi.md](docs/ui-variant-plan/10-frontend-katman-mimarisi.md) | Uzlaşılmış katman mimarisi: kontrat topolojisi, App Core, renderer katmanları, karar kaydı (MK-1–MK-18). 09 numarası, yerel ağaçtaki bileşen envanteri dosyasına rezervedir |
+| [10-frontend-katman-mimarisi.md](docs/ui-variant-plan/10-frontend-katman-mimarisi.md) | Uzlaşılmış katman mimarisi: kontrat topolojisi, App Core, renderer katmanları, X5 state grameri, Storybook kapsam tablosu, karar kaydı (MK-1–MK-20). 09 numarası, yerel ağaçtaki bileşen envanteri dosyasına rezervedir |
 
 ## Sabit tasarım kararları (özet)
 
