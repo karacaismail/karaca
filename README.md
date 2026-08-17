@@ -26,7 +26,8 @@ ince ayrıntı karşılaştırmasıdır.
 | [07-storybook-mcp-promptlari.md](docs/ui-variant-plan/07-storybook-mcp-promptlari.md) | Storybook MCP prompt kataloğu (matrix story, testler, CI kapıları) |
 | [08-degerlendirme-protokolu.md](docs/ui-variant-plan/08-degerlendirme-protokolu.md) | Varyant seçim protokolü: skor kartı, eleme, domain eşleme, freeze |
 | [10-frontend-katman-mimarisi.md](docs/ui-variant-plan/10-frontend-katman-mimarisi.md) | Uzlaşılmış katman mimarisi: kontrat topolojisi, App Core, renderer katmanları, X5 state grameri, Storybook kapsam tablosu, karar kaydı (MK-1–MK-20). 09 numarası, yerel ağaçtaki bileşen envanteri dosyasına rezervedir |
-| [11-vibecoding-gorev-paketi.md](docs/ui-variant-plan/11-vibecoding-gorev-paketi.md) | Çok-ajanlı üretim paketi: temel yapı sırası (token→CSS→layout→primitive→davranış→bileşen), dalga/worker planı, worker görev şablonu, orkestratör kuralları |
+| [11-vibecoding-gorev-paketi.md](docs/ui-variant-plan/11-vibecoding-gorev-paketi.md) | Çok-ajanlı üretim paketi: W−1 Foundation Contract kapısı, temel yapı sırası, dalga/worker planı, Storybook bilgi mimarisi, worker şablonu, orkestratör kuralları |
+| [12-legacy-figma-gecis-haritasi.md](docs/ui-variant-plan/12-legacy-figma-gecis-haritasi.md) | 5 yıllık Figma "Variants" sisteminin yeni token mimarisine geçiş matrisi (KEEP/RENAME/SPLIT/MERGE/RETIRE) |
 
 ## Sabit tasarım kararları (özet)
 

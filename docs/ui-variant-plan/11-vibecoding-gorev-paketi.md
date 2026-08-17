@@ -21,6 +21,43 @@ Bağlantılı dosyalar: [00-genel-plan.md](./00-genel-plan.md) ·
   token'dır** (R1); layout / 320px / adaptive-fluid **bileşen değil R3 katmanıdır**.
   Bunlar butondan ÖNCE biter — aksi halde her bileşen iki kez yazılır.
 
+## 1.5 W−1 — Foundation Contract kapısı (HER ŞEYDEN ÖNCE)
+
+Gerçek durum: bu repo şu an yalnız spesifikasyon içerir — `package.json`, `src/`,
+`.storybook` YOKTUR. Var olmayan workspace'e writer açılmaz. W0'dan önce W−1 kapısı
+tamamlanır; W−1 **read-only**'dir, tek satır ürün kodu yazılmaz.
+
+**Tek bloklayıcı sahip kararı — implementation workspace:**
+
+- **Öneri (A):** bu repo (`karaca`) monorepo'ya genişletilir — spec ile kod aynı
+  repoda kalır, CI kapıları spec'e karşı çalışır, senkron sorunu doğmaz:
+
+  ```text
+  docs/ui-variant-plan/   (mevcut spec — dokunulmaz)
+  apps/storybook/         apps/admin-demo/
+  packages/tokens/  foundations/  layout/  behaviors/
+  packages/renderer-antd/  renderer-aep/  charts/  testing/
+  ```
+
+- Alternatif (B): ayrı implementation reposu + spec senkronu (ek koordinasyon maliyeti).
+
+Karar İsmail'indir; verilmeden hiçbir writer kod yazmaz (fail-closed).
+
+**W−1 read-only analiz worker'ları (5 pane):**
+
+| Analist | Görev |
+|---|---|
+| repo-analyst | Yerel `frontend/claudeui` dahil mevcut kod varlığını envanterle (package.json, React/Vite/TS/Storybook sürümleri, package manager); workspace kararı için A/B kanıtı topla |
+| legacy-analyst | [12-legacy-figma-gecis-haritasi.md](./12-legacy-figma-gecis-haritasi.md) taslağını eski Figma dosyasına karşı doğrula/tamamla; UNKNOWN kalanları sahibe listele |
+| token-analyst | DTCG-biçimli tokens JSON'u **tek doğruluk kaynağı** olarak kurgula; akış TEK YÖN: JSON → Style Dictionary → CSS vars / TS tipleri / AntD ThemeConfig / ECharts theme / Storybook docs / Figma Variables. Figma'da yapılan değişiklik JSON'a PR olarak döner. Koleksiyon ADLARI SABİTTİR: primitive / semantic / density / variant-overlay ([01]/[06]); `comp.*` component-token seviyesi yalnız gerçekten gerektiğinde açılır. Henüz değer dosyası yazma |
+| contract-analyst | Capability manifest: AntD ↔ AEP bileşen eşlemesi **kabiliyet paritesi** olarak (AntD props API'si KOPYALANMAZ); davranış sahipleri; ilk pilot kümesi |
+| qa-analyst | Kabul kapıları: 320 min viewport sözleşmesi, container-query, RTL, klavye, **axe yeşil + klavye-tam play + manuel screen-reader/reflow turu** (axe tek başına a11y kanıtı değildir), görsel regresyon, performans |
+
+**Çıktı:** tek Foundation Contract dokümanı (workspace, package sınırları, CSS @layer
+sırası + scope politikası, token akışı, legacy matrisi, Storybook bilgi mimarisi,
+capability manifest, pilot sırası, kabul kriterleri) — donar, hash'lenir. STOP GATE:
+bu donmadan W0 açılmaz.
+
 ## 2. Temel yapı sırası (bağımlılık sıralı)
 
 | Sıra | İş | Katman | Neden bu sırada |
@@ -48,7 +85,8 @@ Dalga içi worker'lar paralel; dalgalar arası sıralıdır. Dosya sınırları 
 
 | Dalga | Worker | İş | Dosya sınırı |
 |---|---|---|---|
-| W0 | w0-tokens | 0.1 | `src/tokens/**`, `style-dictionary.config.*` |
+| **W−1** | 5 analist (§1.5) | Foundation Contract — read-only | Dosya yazmaz; rapor üretir |
+| W0 | w0-tokens | 0.1 | `packages/tokens/**`, `style-dictionary.config.*` |
 | W0 | w0-cssbase | 0.2 (0.1'in token ADLARINA karşı yazar, değerleri beklemez) | `src/styles/**` |
 | W0 | w0-layout | 0.3 | `src/layout/**` |
 | W0 | w0-storybook | 0.4 | `.storybook/**`, `src/testing/**` |
@@ -64,6 +102,32 @@ Dalga içi worker'lar paralel; dalgalar arası sıralıdır. Dosya sınırları 
 Birleştirme kuralı: her worker kendi branch'inde çalışır, PR açar; orkestratör dalga
 sonunda sırayla merge eder (w0-tokens her zaman ilk). Merge kapısı = story + play +
 axe yeşil + token drift temiz.
+
+## 3.5 Storybook bilgi mimarisi (ilk kümeler — Button İLK DEĞİLDİR)
+
+| Küme | İçerik | Kapı |
+|---|---|---|
+| **00 Foundations** | Token docs sayfaları (JSON kaynağından otomatik): renk primitive'leri, semantic renkler + kontrast oranları, tipografi, spacing, sizing/density, border, radius, elevation, motion, ikonografi, focus ring, tema'lar, legacy geçiş haritası ([12]) | Light/dark değerleri ve primitive→semantic alias ilişkisi görünür; hardcode değer yok |
+| **01 Layout Lab** | Container, Box, Stack, Inline, Grid, AutoGrid, Split, SidebarLayout, StickyRegion, ScrollArea, SafeArea | Her story 320→1440 kesintisiz resize + LTR/RTL + uzun içerik + overflow + zoom/reflow |
+| **02 State & A11y Lab** | X5 gramerinin görsel sözleşmesi: HoverPointerGuard, FocusVisible, DisabledVsReadOnly, CheckedIndeterminate, SelectedPressedCurrent, ExpandedCollapsed, ValidInvalidUserInvalid, LoadingBusy, ReducedMotion | Native pseudo / ARIA state / headless `data-*` / ürün durumu ayrımı görünür ve test edilebilir |
+| **03 Primitives** | Text, Heading, Icon, Divider, Surface, VisuallyHidden, Skeleton, Spinner. **Portal burada DEĞİL** — görsel primitive değil, R5 overlay iç altyapısıdır | Story + axe |
+| **04 Pilotlar** | Button, IconButton, Link, FormField, TextField, Checkbox, Switch, Badge/Status — **A–F pilotu yalnız burada başlar** | StateMatrix + form anatomisi + theme/density + 320px dört sözleşmeyi kanıtlar |
+| **05 Overlay** | Tooltip, Popover, Menu, Select, Combobox, Dialog, Drawer | Overlay makinesi (Portal/positioning/dismiss) W1'den |
+| **06 Veri + master | Card, Table, DataGrid, Pagination, Toolbar, FilterBar, ChartBlock, AppShell, ListPage/FormPage/DetailPage/Dashboard master'ları | MK-16 golden slice sonrası |
+
+Kural: 00–02 kümeleri görünür ve test edilebilir olmadan 04 açılmaz.
+
+**A–F rollout kuralı (netleştirme):** A–F eksen DEĞERLERİ zaten [01]'de spesifiye
+edilmiştir — worker değer İCAT ETMEZ. Erken yapılmayacak olan şey implementasyon
+kapsamıdır: variant-overlay CSS'i önce 04 pilot bileşenlerinde (Button/Field/Surface)
+kanıtlanır, sonra genişletilir. Tam varyant×tema×density×state matrisi nightly koşulur;
+PR'da budanmış/pairwise küme ([07] §4).
+
+**CSS mimarisi (W0'da, ilk bileşenden önce):** `@layer reset, tokens, base, layout,
+components, utilities, overrides` sırası; `:where()` taban specificity politikası;
+scope attribute'ları `[data-theme] [data-density] [data-variant] [data-renderer]`;
+AntD reset izolasyonu; portal container + z-index politikası; logical properties
+zorunluluğu; global selector yasağı.
 
 ## 4. Worker görev şablonu (her pane'e verilen prompt iskeleti)
 
@@ -102,6 +166,8 @@ Report: what you built, what you could not verify, any spec ambiguity found
 
 ## 5. Orkestratör (Codex) kuralları
 
+0. **W−1 tamamlanıp Foundation Contract donmadan writer açma (fail-closed).**
+   Implementation workspace kararı (§1.5 A/B) sahibden gelmeden kod yazılmaz.
 1. Önce yerel ağacı kanonik repo ile senkronla (`karacaismail/karaca`,
    branch `claude/ea-platform-ui-design-u6ew78`); spesifikasyonu yerel kopyadan değil
    repodan oku. Yerel-repo farkı görürsen ÜRETİME BAŞLAMADAN raporla.
