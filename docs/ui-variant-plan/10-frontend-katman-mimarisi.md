@@ -69,8 +69,9 @@ Bağlantılı dosyalar: [00-genel-plan.md](./00-genel-plan.md) ·
 │   R1 Design token'ları (primitive/semantic/density/variant-overlay)│
 │   R2 CSS temeli (reset, font, tema modları, logical props/RTL)    │
 │   R3 Grid & layout (container-query öncelikli)                    │
-│   R4 Görsel primitive'ler (Box, Text, Icon, Portal, VisuallyHidden)│
-│   R5 Davranış katmanı (aile başına TEK sahip — MK-2)                │
+│   R4 Görsel primitive'ler (Box, Text, Icon, VisuallyHidden)       │
+│   R5 Davranış katmanı (aile başına TEK sahip — MK-2; Portal/      │
+│      overlay konumlandırma altyapısı bu katmandadır)               │
 │   R6 Bileşenler (davranış + token; varyant-kör)                   │
 │   R7 Durum bileşenleri (Skeleton/Empty/Error/Offline/Permission)  │
 │   R8 Birleşik pattern'ler (DataGrid, arama+filtre, form bölümü)   │
@@ -156,8 +157,8 @@ yalnız theme adapter (vendor-neutral token → `ThemeConfig`) beslenir.
 | R1 Token'lar | 4 koleksiyon: primitive / semantic (light+dark) / density (3 mod) / variant-overlay (a–f). Style Dictionary → CSS variables + AntD ThemeConfig adapter çıktısı | Kontrast matrisi AA; token drift CI'da |
 | R2 CSS temeli | Reset, self-host Roboto+Noto fallback, tema modları, **logical properties (start/end)**, `prefers-reduced-motion` | RTL smoke testi; dark/light geçişi |
 | R3 Grid & layout | Container-query öncelikli; Stack/Flex/Split; 320px-first bantlar | 320/768/1440 story'leri |
-| R4 Görsel primitive'ler | Box, Text, Icon (Phosphor), Portal, VisuallyHidden — ürün anlamı taşımaz | Story + axe |
-| R5 Davranış katmanı | Aile başına TEK sahip: grid → TanStack Table (+Virtual); form/overlay → React Aria (aday, MK-2); sahiplik tablosu bu dosyada güncellenir | Klavye-tam play testleri; sahip başına tek implementasyon |
+| R4 Görsel primitive'ler | Box, Text, Icon (Phosphor), VisuallyHidden — ürün anlamı taşımaz (Portal R4 DEĞİL, R5 altyapısıdır) | Story + axe |
+| R5 Davranış katmanı | Aile başına TEK sahip: grid → TanStack Table (+Virtual); form/overlay → React Aria (aday, MK-2); same-node morph/disclosure → `useAiCommandCardState` custom hook'u ([13](./13-ai-command-card-spec.md), karar kapısından geçti); Portal/overlay konumlandırma altyapısı buradadır | Klavye-tam play testleri; sahip başına tek implementasyon |
 | R6 Bileşenler | R5 davranışı + R1 token'ı birleştirir; **varyant-kör** — yalnız `data-variant` token'ı okur, harf bilmez | Matrix story (varyant × tema × density) + axe yeşil |
 | R7 Durum bileşenleri | Skeleton (gerçek içerik geometrisi + **density'ye tepkili**, layout shift yok), Empty, Error, Offline, Permission-denied | Her sayfa şablonunda 5 durumun story'si |
 | R8 Birleşik pattern'ler | DataGrid, arama+filtre, form bölümü, file upload, tarih aralığı | Play + i18n (de/tr/ar-RTL) story'leri |

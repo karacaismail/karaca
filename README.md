@@ -28,6 +28,7 @@ ince ayrıntı karşılaştırmasıdır.
 | [10-frontend-katman-mimarisi.md](docs/ui-variant-plan/10-frontend-katman-mimarisi.md) | Uzlaşılmış katman mimarisi: kontrat topolojisi, App Core, renderer katmanları, X5 state grameri, Storybook kapsam tablosu, karar kaydı (MK-1–MK-20). 09 numarası, yerel ağaçtaki bileşen envanteri dosyasına rezervedir |
 | [11-vibecoding-gorev-paketi.md](docs/ui-variant-plan/11-vibecoding-gorev-paketi.md) | Çok-ajanlı üretim paketi: W−1 Foundation Contract kapısı, temel yapı sırası, dalga/worker planı, Storybook bilgi mimarisi, worker şablonu, orkestratör kuralları |
 | [12-legacy-figma-gecis-haritasi.md](docs/ui-variant-plan/12-legacy-figma-gecis-haritasi.md) | 5 yıllık Figma "Variants" sisteminin yeni token mimarisine geçiş matrisi (KEEP/RENAME/SPLIT/MERGE/RETIRE) |
+| [13-ai-command-card-spec.md](docs/ui-variant-plan/13-ai-command-card-spec.md) | AiCommandCard spesifikasyonu: Morph Yasası (aynı-düğüm genişleme), mikro-animasyon sözleşme tablosu, durum makinesi, koreografi, play testleri |
 
 ## Sabit tasarım kararları (özet)
 

@@ -98,6 +98,7 @@ Dalga içi worker'lar paralel; dalgalar arası sıralıdır. Dosya sınırları 
 | W3 | w3-overlay | 2.5 | `src/components/{select,menu}/**` |
 | W3 | w3-nav | 2.6 | `src/components/{tabs,toolbar}/**` |
 | W4 | w4-goldenslice | MK-16 dilimi | `src/surfaces/**`, `src/renderers/**` |
+| W5 | w5-ai-command-card | [13](./13-ai-command-card-spec.md) spesifikasyonu (post-golden-slice) | `packages/renderer-aep/src/patterns/ai-command-card/**` |
 
 Birleştirme kuralı: her worker kendi branch'inde çalışır, PR açar; orkestratör dalga
 sonunda sırayla merge eder (w0-tokens her zaman ilk). Merge kapısı = story + play +

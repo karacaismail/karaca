@@ -94,7 +94,7 @@ yeniden ölçülür. Durum bilgisi hiçbir zaman yalnız renkle iletilmez (ikon 
 | Density | comfortable(52) / standard(44) / compact(36) satır yüksekliği; font küçülterek DEĞİL, padding/metadata/kolon görünürlüğü ile |
 | Erişilebilirlik | WCAG 2.2 AA; metin kontrastı her state'te ≥4.5:1; focus-visible her varyantta ZORUNLU (stili varyant belirler; asla yalnız border rengi değişimiyle yetinilmez) |
 | Durum iletişimi | Asla yalnız renk; ikon + metin şart |
-| Motion | Yalnız işlevsel (state/süreklilik/nedensellik); 120–240ms, ease-out; `prefers-reduced-motion` desteklenir; hover'da scale YOK |
+| Motion | Yalnız işlevsel (state/süreklilik/nedensellik); 120–240ms, ease-out; `prefers-reduced-motion` desteklenir; hover'da scale YOK. Ek kategoriler (sahip talebi, [13](./13-ai-command-card-spec.md) §6): `motion/morph` 300–400ms — YALNIZ aynı-düğüm konteyner morph'ları; `motion/ambient` — YALNIZ AI varlık işareti: nabız (2s faz / 4s periyot) + partikül döngüsü (3s), reduced-motion'da kapalı |
 | Responsive | Mobile-native first: önce 320px; bantlar 320 / 480 / 768 / 1024 / 1440; container-query öncelikli |
 | i18n | RTL mirror; CSS logical properties (start/end); CLDR/Intl formatlama; Almanca uzama ve Arapça RTL testi zorunlu; label asla placeholder'a gömülmez — her zaman görünür ve üstte |
 | İkon | Phosphor (öncelik), SVG; emoji yasak |
@@ -122,7 +122,7 @@ dışına çıkan her fark bir çerçeve ihlalidir.
 | 8 | Input biçimi (muafiyet alanı) | Radius muafiyetinin kullanımı: 0px / 4px / pill + dolgu ve kenar stratejisi |
 | 9 | Label ağırlığı/işlenişi | İzinli weight'lerin label/değer hiyerarşisine dağılımı |
 | 10 | Tablo başlık hücresi işlenişi | Header hücresinin zemin, çizgi ve tipografi kararı |
-| 11 | Accent (sarı/mavi) konuşlandırma dozu | Sarı ve mavinin nerede, ne yoğunlukta kullanıldığı |
+| 11 | Accent (sarı/mavi) konuşlandırma dozu | Sarı ve mavinin nerede, ne yoğunlukta kullanıldığı. Varyant-üstü istisna: AI varlık işareti (AiPresenceOrb, [13](./13-ai-command-card-spec.md)) TÜM varyantlarda accent sarı token'ını taşır — eksen 11 dozları bu işareti kapsamaz |
 | 12 | Motion mikro-davranışı | 120–240ms bandı içinde varyanta özgü izinli geçişler |
 
 ## 3. Varyant tanımları [A–F]
